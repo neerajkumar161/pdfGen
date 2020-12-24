@@ -110,11 +110,10 @@ app.get('/pdf', async (req, res, next) => {
   const url = req.query.target;
   console.log(req.query.target);
   const browser = await puppeteer.launch({
+    headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   const webPage = await browser.newPage();
-
-  //const url = 'https://livecodestream.dev/post';
 
   await webPage.setViewport({ width: 1200, height: 800 });
   try {
