@@ -1,0 +1,29 @@
+{
+  "name": "nodejsprep",
+  "version": "1.0.0",
+  "description": "",
+  "main": "node.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "firebase-tools": "^9.1.0",
+    "puppeteer": "^5.5.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "12.19.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neerajkumar161/pdfGenrator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neerajkumar161/pdfGenrator/issues"
+  },
+  "homepage": "https://github.com/neerajkumar161/pdfGenrator#readme"
+}
