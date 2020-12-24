@@ -94,7 +94,7 @@ app.get('/', async (req, res, next) => {
     function goToWebsite() {
       const url = input.value;
       const anchor = document.getElementById('anchor');
-      anchor.href = 'http://localhost:3000/pdf?target=' + url;
+      anchor.href = 'https://pdfgenerator161.herokuapp.com/pdf?target=' + url;
     }
   </script>
 </html>
