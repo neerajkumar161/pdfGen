@@ -1,8 +1,8 @@
-const express = require('express');
-const puppeteer = require('puppeteer');
-const app = express();
+const express = require('express')
+const puppeteer = require('puppeteer')
+const app = express()
 
-app.get('/', async (req, res, next) => {
+app.get('/', (req, res, next) => {
   res.send(
     `<!DOCTYPE html>
 <html lang="en">
@@ -94,59 +94,61 @@ app.get('/', async (req, res, next) => {
     function goToWebsite() {
       const url = input.value;
       const anchor = document.getElementById('anchor');
-      anchor.href = 'https://pdfgenerator161.herokuapp.com/pdf?target=' + url;
+      //anchor.href = 'https://pdfgenerator161.herokuapp.com/pdf?target=' + url;
+      anchor.href = 'http://localhost:3000/pdf?target=' + url;
     }
   </script>
 </html>
 
     `
-  );
+  )
 
-  next();
-});
+  next()
+})
 
 app.get('/pdf', async (req, res, next) => {
-  console.log('im here', req.url);
-  const url = req.query.target;
-  console.log(req.query.target);
-  const browser = await puppeteer.launch({
-    headless: false,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
-  const webPage = await browser.newPage();
-
-  await webPage.setViewport({ width: 1200, height: 800 });
   try {
-    await webPage.goto(url, {
-      waitUntil: 'load',
-      timeout: 0,
-    });
+    console.log('im here', req.url)
+    const url = req.query.target
+    console.log(req.query.target)
+    const browser = await puppeteer.launch()
+    const webPage = await browser.newPage()
+
+    await webPage.setViewport({ width: 1200, height: 800 })
+    try {
+      await webPage.goto(url, {
+        waitUntil: 'networkidle0',
+        timeout: 0,
+      })
+    } catch (e) {
+      console.log("Web Page doesn't exists!")
+      res.send(`
+        <h2 style="text-align:center;margin-top:25%;">Sorry! Web Page doesn't exists!</h2>
+      `)
+    }
+
+    const pdf = await webPage.pdf({
+      printBackground: true,
+      path: 'webPage.pdf',
+      format: 'A4',
+      margin: {
+        top: '20px',
+        bottom: '40px',
+        left: '20px',
+        right: '20px',
+      },
+    })
+
+    await browser.close()
+
+    res.contentType('application/pdf')
+    res.send(pdf)
+    next()
   } catch (e) {
-    console.log("Web Page doesn't exists!");
-    res.send(`
-      <h2 style="text-align:center;margin-top:25%;">Sorry! Web Page doesn't exists!</h2>
-    `);
+    console.log('Something went wrong!', e.message)
   }
-
-  const pdf = await webPage.pdf({
-    printBackground: true,
-    path: 'webPage.pdf',
-    format: 'A4',
-    margin: {
-      top: '20px',
-      bottom: '40px',
-      left: '20px',
-      right: '20px',
-    },
-  });
-
-  await browser.close();
-
-  res.contentType('application/pdf');
-  res.send(pdf);
-  next();
-});
+})
 
 app.listen(3000, () => {
-  console.log('Connected to Server');
-});
+  console.log('Connected to Server')
+})
