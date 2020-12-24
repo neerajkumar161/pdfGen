@@ -2,7 +2,7 @@ const express = require('express');
 const puppeteer = require('puppeteer');
 const app = express();
 
-app.get('/', (req, res, next) => {
+app.get('/', async (req, res, next) => {
   res.send(
     `<!DOCTYPE html>
 <html lang="en">
@@ -109,7 +109,9 @@ app.get('/pdf', async (req, res, next) => {
   console.log('im here', req.url);
   const url = req.query.target;
   console.log(req.query.target);
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
   const webPage = await browser.newPage();
 
   //const url = 'https://livecodestream.dev/post';
@@ -146,6 +148,6 @@ app.get('/pdf', async (req, res, next) => {
   next();
 });
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(3000, () => {
   console.log('Connected to Server');
 });
